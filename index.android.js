@@ -3,10 +3,15 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ToastAndroid
 } from 'react-native';
 
 import MapView, { Marker } from 'react-native-maps';
+
+let lat1 = 0, lon1 = 0, lat2 = 0, lon2 = 0;
+
+let counter = 0;
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -28,12 +33,19 @@ export default class SRTask extends Component {
   }
 
   handlePress(e) {
+
+      
+      ToastAndroid.show('Counter = ' + counter, ToastAndroid.SHORT);
+      counter++;
+
+
+
       this.setState({
           markers: [
               ...this.state.markers,
               {
                 coordinate: e.nativeEvent.coordinate, 
-                cost: 'Yo!'
+                cost: 'Sample Text'
               } 
           ]
       })
@@ -42,6 +54,7 @@ export default class SRTask extends Component {
   render() {
     return (
 
+      // creating map view
       <MapView
       style = {styles.container}
       initialRegion={{
@@ -51,12 +64,12 @@ export default class SRTask extends Component {
         longitudeDelta: 0.0421,
       }}
 
+      // what to do when map is pressed
       onPress = {this.handlePress}
-
       >
 
-      { this.state.markers.map((marker) => {
 
+      { this.state.markers.map((marker) => {
         return (
           <Marker { ...marker } >
             <View style={styles.marker}>
