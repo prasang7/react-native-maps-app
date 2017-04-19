@@ -19,10 +19,29 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function setCoordinates(myCounter, lat, lon) {
+  if (myCounter == 0) {
+    lat1 = lat;
+    lon1 = lon;
+  }
+
+  if (myCounter == 1) {
+    lat2 = lat;
+    lon2 = lon;
+  
+
+  }
+
+  ToastAndroid.show(myCounter + ', ' + lat + ' - ' + lon, ToastAndroid.LONG);
+}
+
+function distance(lat1, lon1, lat2, lon2) {
+
+}
+
 export default class SRTask extends Component {
 
   constructor() {
-    
     super();
     
     this.state = {
@@ -34,21 +53,20 @@ export default class SRTask extends Component {
 
   handlePress(e) {
 
-      
-      ToastAndroid.show('Counter = ' + counter, ToastAndroid.SHORT);
-      counter++;
-
-
-
       this.setState({
           markers: [
               ...this.state.markers,
               {
                 coordinate: e.nativeEvent.coordinate, 
-                cost: 'Sample Text'
+                cost: 'Sample Text',
               } 
           ]
       })
+
+      setCoordinates(counter, 
+        e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude);
+      counter++;
+      
   }
 
   render() {
@@ -67,7 +85,6 @@ export default class SRTask extends Component {
       // what to do when map is pressed
       onPress = {this.handlePress}
       >
-
 
       { this.state.markers.map((marker) => {
         return (
