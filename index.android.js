@@ -12,6 +12,7 @@ import MapView, { Marker } from 'react-native-maps';
 let lat1 = 0, lon1 = 0, lat2 = 0, lon2 = 0;
 
 let counter = 0;
+let distance = 0;
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -28,15 +29,28 @@ function setCoordinates(myCounter, lat, lon) {
   if (myCounter == 1) {
     lat2 = lat;
     lon2 = lon;
-  
-
+    
+    ToastAndroid.show('Distance: ' + distanceCalc(lat1, lon1, lat2, lon2) + ' km', ToastAndroid.LONG)
   }
-
-  ToastAndroid.show(myCounter + ', ' + lat + ' - ' + lon, ToastAndroid.LONG);
 }
 
-function distance(lat1, lon1, lat2, lon2) {
+function distanceCalc(lat1, lon1, lat2, lon2) {
+  
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
 }
 
 export default class SRTask extends Component {
@@ -58,7 +72,7 @@ export default class SRTask extends Component {
               ...this.state.markers,
               {
                 coordinate: e.nativeEvent.coordinate, 
-                cost: 'Sample Text',
+                cost: 'Marker ' + (counter + 1),
               } 
           ]
       })
@@ -66,7 +80,6 @@ export default class SRTask extends Component {
       setCoordinates(counter, 
         e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude);
       counter++;
-      
   }
 
   render() {
@@ -118,12 +131,13 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-
   marker: {
-    backgroundColor: "#550bbc",
+    backgroundColor: "#ffffff",
     padding: 5,
-    borderRadius: 5
-  }
+    borderRadius: 5,
+    borderColor: "#ff0000",
+    borderWidth: 2
+  },
 });
 
 AppRegistry.registerComponent('SRTask', () => SRTask);
